@@ -1,0 +1,141 @@
+﻿/* --- GENEL ARKA PLAN --- */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/medipol-giris.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px);
+    z-index: -2; /* Header z-index 1000 olduğu için sorun olmaz */
+}
+
+    .background::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+/* --- FORM KONTEYNER --- */
+.form-wrapper {
+    position: absolute;
+    top: 55%; /* Header 100px olduğu için biraz daha aşağı çektik */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(255, 204, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
+    color: #e4e4e4ff;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #e4e4e4ff;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #e4e4e4ff;
+    padding-bottom: 10px;
+}
+
+/* --- GÖRÜNTÜLEME MODU --- */
+.view-box {
+    font-size: 16px;
+    line-height: 1.8;
+    color: white;
+}
+
+    .view-box strong {
+        color: #e4e4e4ff; /* Label'lar sarı kalsın */
+    }
+
+/* --- DÜZENLEME MODU (FORM) --- */
+.edit-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.styled-form label {
+    display: block;
+    color: #e4e4e4ff;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.styled-form input {
+    width: 100%; /* 93% yerine 100% yapıp box-sizing kullandık */
+    box-sizing: border-box;
+    padding: 12px;
+    border: 2px solid #e4e4e4ff;
+    border-radius: 8px;
+    background-color: black;
+    color: #e4e4e4ff;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+    .styled-form input:focus {
+        border-color: #ffd700;
+        box-shadow: 0 0 8px #ffd700;
+    }
+
+/* --- BUTONLAR --- */
+/* Ortak Buton Stili */
+.duzenle,
+.styled-form button {
+    background-color: #e4e4e4ff;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+    .duzenle:hover,
+    .styled-form button:hover {
+        background-color: #e6b800;
+        transform: translateY(-2px); /* Küçük bir hover efekti */
+    }
+
+/* İptal Butonu için Özel Renk (Opsiyonel) */
+.btn-iptal {
+    background-color: #444 !important;
+    color: white !important;
+    margin-top: 5px;
+}
+/* ============================================================
+   PROFİL DÜZENLEME KESİN ÇÖZÜM (RESPONSIVE)
+   ============================================================ */
+
+@media (max-width: 768px) {
+    /* 1. Formun mobilde hapsolmasını engelliyoruz */
+    .form-wrapper {
+        top: 50px !important; /* Header'dan sonra temiz bir boşluk */
+        left: 10px !important;
+        transform: none !important; /* Ortalama hesaplarını sıfırla */
+        margin: 100px auto 40px auto !important; /* Header mesafesini marginle koru */
+        width: 95% !important;
+        box-sizing: border-box;
+    }
+}
+
+   
+
+

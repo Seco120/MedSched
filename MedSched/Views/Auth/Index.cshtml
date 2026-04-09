@@ -1,0 +1,197 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Giriş ve Kayıt";
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+
+    <div class="container">
+        <div class="left-section">
+            <div class="background-blur"></div>
+        </div>
+
+        <div class="right-section">
+            <div class="page-logo">
+                <img src="/images/logo.png" alt="Logo" class="logo-img" />
+            </div>
+
+            <div class="button-container">
+                <button id="loginBtn" class="form-toggle-btn active" onclick="toggleForm('login')">Giriş Yap</button>
+                <button id="signupBtn" class="form-toggle-btn" onclick="toggleForm('signup')">Kayıt Ol</button>
+            </div>
+
+            <div id="loginForm" class="form-container active">
+                <form id="innerLoginForm">
+                    <input type="text" name="tcKimlikNo" id="loginTc" placeholder="TC Kimlik No" required maxlength="11" />
+                    <input type="password" name="password" id="loginPass" placeholder="Şifre" required />
+                    <button type="submit">Giriş Yap</button>
+                    <p class="forgot-password"><a href="#" onclick="toggleForm('forgotPassword')">Şifremi Unuttum</a></p>
+                </form>
+                <div id="login-error" class="error-box" style="color:red; display:none; text-align:center; margin-top:10px;"></div>
+            </div>
+
+            <div id="signupForm" class="form-container">
+                <form id="registerForm">
+                    <input type="text" name="tcKimlikNo" id="regTc" placeholder="TC Kimlik No" required maxlength="11" />
+                    <input type="text" name="fullName" placeholder="Ad Soyad" required />
+                    <input type="email" name="email" placeholder="E-posta" required />
+                    <input type="password" name="password" placeholder="Şifre" required />
+                    <button type="submit">Kayıt Ol</button>
+                </form>
+
+                <div id="signup-error" class="error-box" style="color:red; display:none; text-align:center; margin-top:10px;"></div>
+
+                <div id="success-area" style="display:none; text-align:center; margin-top:10px;">
+                    <div style="color: green; font-weight: 600; margin-bottom: 15px;">
+                        Kaydınız başarıyla oluşturulmuştur!
+                    </div>
+                    <button type="button" class="form-toggle-btn active" style="width:100%;" onclick="toggleForm('login')">
+                        Giriş Yap
+                    </button>
+                </div>
+            </div>
+
+            <div id="forgotPasswordForm" class="form-container">
+                <form id="forgotPasswordFormElement">
+                    <input type="email" id="forgotEmail" placeholder="E-posta adresiniz" required />
+                    <button type="submit">Şifre Sıfırla</button>
+                </form>
+                <p id="successMessage" class="success-box" style="color:green; display:none;"></p>
+                <p id="errorMessage" class="error-box" style="color:red; display:none;"></p>
+                <p id="countdownTimer" style="display:none; text-align:center;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // FORM DEĞİŞTİRME - Yeni akışa göre güncellendi
+        function toggleForm(formType) {
+        $(".form-container, .form-toggle-btn").removeClass("active");
+        $("#" + formType + "Form").addClass("active");
+        $("#" + formType + "Btn").addClass("active");
+        $(".error-box, #success-message").hide().text("");
+
+        // Giriş yap sayfasına dönülüyorsa kayıt formunu ve başarı alanını resetle
+        if (formType === 'login') {
+        $("#success-area").hide();
+        if ($("#registerForm").length > 0) {
+        $("#registerForm")[0].reset();
+        $("#registerForm").show();
+        }
+        }
+        }
+
+        $(document).ready(function () {
+            
+        // 1. GİRİŞ İŞLEMİ
+        $("#innerLoginForm").on("submit", function (e) {
+        e.preventDefault();
+        $.post("/Auth/Login", $(this).serialize(), function (response) {
+        if (response.success) {
+        window.location.href = "/Home/HomePage";
+        } else {
+        $("#login-error").text(response.error || "Giriş bilgileri hatalı!").fadeIn();
+        }
+        });
+        });
+
+        // 2. KAYIT İŞLEMİ - İstediğin yeni başarı akışı eklendi
+        $("#registerForm").on("submit", function (e) {
+        e.preventDefault();
+        let formData = $(this).serialize();
+        let tc = $("#regTc").val();
+
+        $("#signup-error").hide();
+        let $btn = $(this).find("button[type='submit']");
+        $btn.prop("disabled", true).text("Kontrol ediliyor...");
+
+        // Önce TC Kontrol
+        $.post("/Auth/CheckTC", { tcKimlikNo: tc }, function (res) {
+        if (res.exists) {
+        $("#signup-error").text("Bu TC zaten kayıtlı!").fadeIn();
+        $btn.prop("disabled", false).text("Kayıt Ol");
+        } else {
+        // TC yoksa kayıt ol
+        $.post("/Auth/Register", formData, function (regRes) {
+        if (regRes.success) {
+        // Kayıt formunu ve hataları gizle, başarı alanını aç
+        $("#registerForm, #signup-error").fadeOut(400, function() {
+        $("#success-area").fadeIn(); // Yeni başarı divi
+        });
+        } else {
+        let errorMsg = regRes.error || "Kayıt hatası!";
+        $("#signup-error").text(errorMsg).fadeIn();
+        $btn.prop("disabled", false).text("Kayıt Ol");
+        }
+        }).fail(function() {
+        $("#signup-error").text("Sunucu hatası oluştu!").fadeIn();
+        $btn.prop("disabled", false).text("Kayıt Ol");
+        });
+        }
+        }).fail(function() {
+        $("#signup-error").text("Bağlantı hatası!").fadeIn();
+        $btn.prop("disabled", false).text("Kayıt Ol");
+        });
+        });
+
+        // 3. ŞİFRE SIFIRLAMA
+        $("#forgotPasswordFormElement").on("submit", function (e) {
+        e.preventDefault();
+        let email = $("#forgotEmail").val();
+        $.post("/Account/ForgotPassword", { email: email }, function (res) {
+        $("#forgotPasswordFormElement").fadeOut(300, function () {
+        $("#successMessage").text(res).fadeIn();
+        startCountdown();
+        });
+        });
+        });
+
+        function startCountdown() {
+        let count = 10;
+        $("#countdownTimer").show();
+        let timer = setInterval(() => {
+        $("#countdownTimer").text("Formun yenilenmesine " + --count + " sn kaldı");
+        if (count <= 0) {
+        clearInterval(timer);
+        $("#successMessage, #countdownTimer").hide();
+        $("#forgotPasswordFormElement").fadeIn();
+        }
+        }, 1000);
+        }
+
+        // 4. ARKA PLAN DEĞİŞTİRME
+        let images = [
+        "/images/medipol-camlica.jpg",
+        "/images/medipol-bagcilar.jpg",
+        "/images/medipol-hastanesi4.jpg",
+        "/images/medipol2.jpg"
+        ];
+        let currentIndex = 0;
+        let backgroundBlur = $(".background-blur");
+
+        function changeBackground() {
+        backgroundBlur.fadeOut(500, function () {
+        $(this).css("background-image", "url('" + images[currentIndex] + "')").fadeIn(500);
+        currentIndex = (currentIndex + 1) % images.length;
+        });
+        }
+            
+        backgroundBlur.css("background-image", "url('" + images[0] + "')");
+        setInterval(changeBackground, 5000);
+
+        // Tarayıcı geri tuşu koruması
+        history.pushState(null, null, location.href);
+        window.onpopstate = () => history.pushState(null, null, location.href);
+        });
+    </script>
+</body>
+</html>

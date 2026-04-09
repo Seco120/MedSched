@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewData["Title"] = "Profil Ayarları";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProfilAyarları.css">
+}
+
+<div class="background"></div>
+<div class="form-wrapper">
+    <h2 class="form-title">Profil Bilgileri</h2>
+
+    <div id="view-mode" class="view-box">
+        <p><strong style="color:#e4e4e4ff">Ad Soyad:</strong> @Model.AdSoyad</p>
+        <p><strong style="color:#e4e4e4ff">E-posta:</strong> @Model.Eposta</p>
+        <button class="duzenle" type="button" onclick="switchToEdit()">Düzenle</button>
+    </div>
+
+    <form id="edit-mode" class="edit-box styled-form" style="display: none;">
+        <label>Ad Soyad</label>
+        <input style="color:white" type="text" name="AdSoyad" value="@Model.AdSoyad" required />
+
+        <label>E-posta</label>
+        <input style="color:white" type="email" name="Eposta" value="@Model.Eposta" required />
+
+        <label>Şifre</label>
+        <input style="color:white" type="password" name="Sifre" placeholder="Yeni şifre (zorunlu değil)" />
+
+        <button type="submit">Kaydet</button>
+        <button type="button" onclick="switchToView()" style="background-color: #555;">İptal</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Modlar arası geçiş fonksiyonları (Global olmalı)
+        function switchToEdit() {
+            $("#view-mode").hide();
+            $("#edit-mode").fadeIn();
+        }
+
+        function switchToView() {
+            $("#edit-mode").hide();
+            $("#view-mode").fadeIn();
+        }
+
+        $(document).ready(function () {
+            // Form Gönderimi
+            $("#edit-mode").on("submit", function (e) {
+                e.preventDefault();
+
+                const formData = {
+                    AdSoyad: $("input[name='AdSoyad']").val().trim(),
+                    Eposta: $("input[name='Eposta']").val().trim(),
+                    Sifre: $("input[name='Sifre']").val().trim()
+                };
+
+                if (formData.AdSoyad === "" || formData.Eposta === "") {
+                    alert("Lütfen gerekli alanları doldurun.");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/ProfilAyarlari",
+                    data: formData,
+                    success: function (response) {
+                        // Layout'taki showToast'u çağırıyoruz
+                        if (typeof showToast === "function") {
+                            showToast("Bilgileriniz güncellendi!", true);
+                        }
+                        setTimeout(() => { location.reload(); }, 1000);
+                    },
+                    error: function () {
+                        alert("❌ Güncelleme sırasında bir hata oluştu.");
+                    }
+                });
+            });
+
+            // Email Kontrolü
+            $("input[name='Eposta']").on("blur", function () {
+                const email = $(this).val().trim();
+                if (email === "" || email === "@Model.Eposta") return;
+
+                $.post("/Account/CheckEmail", { email: email }, function (response) {
+                    if (response.exists) {
+                        alert("❌ Bu e-posta adresi zaten kullanılıyor.");
+                    }
+                });
+            });
+
+            // Sayfa yüklendiğinde mesaj kontrolü
+            var mesaj = '@TempData["BasariliMesaj"]';
+            if (mesaj && mesaj !== '') {
+                showToast(mesaj, true);
+            }
+        });
+    </script>
+}

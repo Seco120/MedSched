@@ -1,0 +1,208 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+ 
+    // Mevcut sayfanın controller ve action bilgisini alıyoruz
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    var adSoyad = Context.Session.GetString("adSoyad");
+    var tcKimlikNo = Context.Session.GetString("tcKimlikNo");
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - MedSched</title>
+
+    <link rel="stylesheet" href="~/css/site.css">
+    @RenderSection("Styles", required: false)
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="/images/logo.png" alt="MedSched Logo">
+        </div>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/" class="@(currentController == "Home" && currentAction == "HomePage" ? "active" : "")">Ana Sayfa</a>
+                </li>
+                <li>
+                    <a href="/hastane" class="@(currentController == "Hastane" ? "active" : "")">Hastanelerimiz</a>
+                </li>
+                <li>
+                    <a href="/iletisim" class="@(currentController == "Contact" ? "active" : "")">İletişim</a>
+                </li>
+            </ul>
+        </nav>
+        <button id="aktifRandevuBtn">Aktif Randevularım</button>
+        <button id="randevuAl" onclick="location.href='/RandevuAl/Index'">Randevu Al</button>
+
+        <div class="user-menu">
+            <button id="menuButton">☰</button>
+            <div class="menu-dropdown" id="userMenu">
+                <p><strong>@adSoyad</strong></p>
+                <p>T.C. No: @tcKimlikNo</p>
+                <a href="/Account/ProfilAyarlari">🔧 Profil Ayarları</a>
+                <button id="logoutButton">🚪 Çıkış Yap</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <div id="randevuOverlay" style="display: none;">
+        <div id="randevuPopup" style="color: white; border-radius: 5px; border: solid 4px #e4e4e4ff; width: 50%; background: black; padding: 10px; position: relative;">
+            <span id="closePopup" style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer;">&times;</span>
+            <h2 style="text-align: center; margin-top: 10px; margin-bottom: 15px; color: #e4e4e4ff;">Randevular</h2>
+                <div id="randevuContent" style="max-height: 250px; overflow-y: auto; margin-top: 40px;"></div>
+        </div>
+    </div>
+
+    <div id="toast" style="display: none; position: fixed; top: 30px; right: 30px; background-color: #4CAF50; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 9999; font-weight: bold;"></div>
+
+    <script>
+        $(document).ready(function () {
+        function setFullHeight() {
+            // Ekranın o anki net yüksekliğini al
+            let vh = window.innerHeight;
+            // Slider ve içindeki resimleri bu yüksekliğe zorla
+            $('.slider-container, .slide, .slide img').css({
+                'height': vh + 'px',
+                'min-height': vh + 'px'
+            });
+        }
+
+        // Sayfa ilk açıldığında çalıştır
+        setFullHeight();
+
+        // Pencere boyutu değiştiğinde (veya telefon dönünce) tekrar hesapla
+        $(window).on('resize', function () {
+            setFullHeight();
+        });
+    });
+
+        // Randevu İşlemleri
+        $("#aktifRandevuBtn").on("click", function () {
+            $("#randevuOverlay").fadeIn();
+            $("#randevuContent").text("Yükleniyor...");
+            tumRandevulariGetir();
+        });
+
+            function tumRandevulariGetir() {
+            $.ajax({
+            url: '/Randevu/GetTümRandevular',
+            method: 'GET',
+            success: function (data) {
+            console.log("Gelen Ham Veri:", data); 
+
+            if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+            let tablo = `<table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+            <thead>
+            <tr>
+            <th>Hastane</th><th>Tarih</th><th>Saat</th><th>Doktor</th><th>Bölüm</th><th>Durum</th><th>İşlem</th>
+            </tr>
+            </thead>
+            <tbody>`;
+                
+            data.data.forEach((r) => {
+            
+            let gercekId = r.randevuId || r.RandevuId || r.id || r.Id || 0;
+
+            tablo += `<tr>
+            <td>${r.hastane}</td><td>${r.tarih}</td><td>${r.saat}</td><td>${r.doktorAdi}</td><td>${r.bolum}</td><td>${r.durum}</td>
+            <td>${r.durum !== "Geçti" ? `<button class="iptalBtn" data-id="${gercekId}">İptal Et</button>` : `<span style="color: white">İptal Edilemez</span>`}</td>
+            </tr>`;
+            });
+            tablo += `</tbody></table>`;
+            $("#randevuContent").html(tablo);
+            } else {
+            $("#randevuContent").text(data.message || "Kayıt bulunamadı.");
+            }
+            }
+            });
+            }
+         
+
+            $(document).on("click", ".iptalBtn", function () {
+            let randevuId = $(this).data("id");
+    
+            // Tarayıcıda F12 -> Console kısmına bak kanka, burada ne yazıyor?
+            console.log("İptal edilmeye çalışılan ID:", randevuId);
+
+            if (!randevuId) {
+            alert("Hata: ID alınamadı! Tablodaki veri ismini kontrol etmelisin.");
+            return;
+            }
+
+            if (confirm("Bu randevuyu iptal etmek istediğinize emin misiniz?")) {
+            $.ajax({
+            url: '/Randevu/IptalEtAktifRandevu',
+            method: 'POST',
+            data: { id: randevuId },
+            success: function (res) {
+            if (res.success) {
+            alert(res.message);
+            tumRandevulariGetir(); // Listeyi yenile
+            } else {
+            // Burası patlarsa gelen hatayı direkt ekranda göreceğiz
+            alert("Hata mesajı: " + res.message);
+            }
+            }
+            });
+            }
+            });
+
+        $("#closePopup").on("click", function () { $("#randevuOverlay").fadeOut(); });
+
+           // Menü aç/kapa animasyonu
+        $("#menuButton").on("click", function () {
+            if ($("#userMenu").css("display") === "none") {
+                $("#userMenu").css({ "display": "block", "opacity": "0", "transform": "translateY(-10px)" })
+                    .animate({ opacity: 1, transform: "translateY(0px)" }, 300);
+            } else {
+                $("#userMenu").animate({ opacity: 0, transform: "translateY(-10px)" }, 200, function () {
+                    $(this).css("display", "none");
+                });
+            }
+        });
+        // Çıkış yap butonu
+        $("#logoutButton").on("click", function () {
+            $.ajax({
+                url: "/Auth/Logout",  // Logout metoduna POST isteği
+                type: "POST",  // POST methodu kullan
+                success: function (response) {
+                    // Sayfa geçmişini değiştirme ve yönlendirme
+                    history.pushState(null, "", "/Auth/Index");  // Tarayıcı geçmişine giriş sayfası ekle
+                    window.location.replace("/Auth/Index");  // Giriş sayfasına yönlendir
+
+                },
+                error: function () {
+                    alert("Sunucuya bağlanırken bir hata oluştu.");
+                }
+            });
+        });
+
+        $(document).on("click", function (event) {
+            if (!$(event.target).closest("#menuButton, #userMenu").length) {
+                $("#userMenu").hide();
+            }
+        });
+
+        function showToast(message, success = true) {
+            const toast = $("#toast");
+            toast.css("background-color", success ? "#4CAF50" : "#f44336").text(message).fadeIn(400);
+            setTimeout(() => { toast.fadeOut(400); }, 3000);
+        }
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

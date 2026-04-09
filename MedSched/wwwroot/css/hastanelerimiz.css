@@ -1,0 +1,96 @@
+﻿
+/* Hastane */
+.hastane-container {
+    margin-top: 130px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    padding: 20px;
+    
+}
+/* Arka planı ayrı div olarak tanımla */
+.arka-plan {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/medipol-giris.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px);
+    z-index: -2; /* Header z-index 1000 olduğu için sorun olmaz */
+}
+
+    /* Blur efekti için yarı saydam katman */
+    .arka-plan::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+/* İçeriği kapsayan ana container */
+.hastane-container {
+    margin-top: 130px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+    .hastane-listesi {
+    flex: 1 1 300px;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+    .hastane-listesi ul {
+        list-style: none;
+        padding: 35px;
+
+    }
+
+    .hastane-listesi li {
+        margin: 10px 0;
+        padding: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+        .hastane-listesi li:hover {
+            color: #aeaeae;
+        }
+
+.hastane-detay {
+    flex: 1 1 600px;
+    max-width: 700px;
+    padding: 20px;
+}
+
+    .hastane-detay img {
+        width: 80%;
+        height: auto;
+        border: solid 4px #e4e4e4ff;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .hastane-detay p {
+        font-size: 25px;
+        color: white;
+    }

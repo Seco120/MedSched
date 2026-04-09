@@ -1,0 +1,230 @@
+﻿:root {
+    /* Daha profesyonel bir koyu tema veya soft light tema için */
+    --primary-color: #e4e4e4ff; /* Koyu lacivert/gri - Güven verir */
+    --accent-color: #3b82f6; /* Sağlık için klasik mavi dokunuşu */
+    --background-color: #f1f5f9;
+    --text-color: black;
+    /* Butonları daha 'altın' değil de 'soft gold/medical' tonuna çektik */
+    --button-color: #ffffff;
+    --button-hover-color: #3c444d;
+    --button-text-color: black;
+    --button-hover-text-color: #ffffff;
+    /* Textboxlar için özel renkler */
+    --input-bg: #ffffff;
+    --input-border: #e2e8f0;
+    --input-focus: #3b82f6;
+    --font-family: 'Poppins', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family), sans-serif;
+    display: flex;
+    height: 100vh;
+    background-color: black;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- SOL KISIM --- */
+.left-section {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.background-blur {
+    position: absolute;
+    inset: 0; /* top, left, width, height: 100% yerine kısa yol */
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out;
+    background-repeat: no-repeat;
+}
+
+    .background-blur::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+/* --- SAĞ KISIM --- */
+.right-section {
+    flex: 1;
+    background-color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.page-logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+    .page-logo .logo-img {
+        width: 220px;
+        height: auto;
+    }
+
+/* --- FORM VE BUTONLAR --- */
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+/* Ortak Buton Stili (Tekrarları temizledik) */
+.form-toggle-btn, form button, .my-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid var(--button-hover-color);
+    border-radius: 30px;
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .form-toggle-btn:hover, form button:hover, .form-toggle-btn.active {
+        background-color: var(--button-hover-color);
+        color: var(--button-hover-text-color);
+    }
+
+.form-container {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+
+    .form-container.active {
+        display: block;
+    }
+
+form input {
+    margin: 10px 0;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* Padding'in genişliği bozmasını engeller */
+}
+
+/* --- EKSTRALAR --- */
+.forgot-password {
+    text-align: right;
+    margin-top: 10px;
+}
+
+    .forgot-password a {
+        font-size: 14px;
+        color: var(--text-color);
+        text-decoration: none;
+    }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+.error-box {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+/* ============================================================
+   GİRİŞ & KAYIT EKRANI KESİN ÇÖZÜM (RESPONSIVE)
+   ============================================================ */
+
+@media (max-width: 992px) {
+    /* 1. Kilitli yapıyı mobilde patlatıyoruz */
+    body {
+        display: block !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        min-height: 100vh;
+        background-color: black;
+    }
+
+    .container {
+        flex-direction: column !important; /* Yan yana yapıyı alt alta al */
+        height: auto !important;
+        display: block !important;
+    }
+
+    /* 2. Sol taraftaki resim alanı (Banner gibi üstte kalsın) */
+    .left-section {
+        height: 250px !important;
+        width: 100% !important;
+        flex: none !important;
+    }
+
+    /* 3. Sağ taraftaki form alanı */
+    .right-section {
+        width: 100% !important;
+        min-height: calc(100vh - 210px) !important; /* Ekranın geri kalanını doldur */
+        padding: 40px 20px !important;
+        background-color: var(--primary-color) !important;
+        border-radius: 30px 30px 0 0 !important; /* Üstten şık bir kavis */
+        margin-top: -40px !important; /* Resmin üzerine hafif bindir (Modern durur) */
+        z-index: 10 !important;
+        box-sizing: border-box;
+    }
+
+    /* 4. Form elemanlarını merkezle */
+    .form-container {
+        width: 100% !important;
+        max-width: 350px !important;
+        margin: 0 auto !important;
+    }
+
+    /* 5. Butonlar mobilde yan yana sığmaz, alt alta alalım */
+    .button-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .form-toggle-btn, form button, .my-button {
+        width: 100% !important;
+        padding: 14px !important; /* Mobilde parmakla basması daha kolay */
+        border-radius: 12px !important;
+    }
+
+    /* 6. Logo Boyutu */
+    .page-logo .logo-img {
+        width: 160px !important;
+    }
+}
+
+/* 4K ve Dev Ekranlar İçin (Opsiyonel ama iyi durur) */
+@media (min-width: 2000px) {
+    .right-section {
+        padding: 80px !important;
+    }
+
+    .form-container {
+        max-width: 500px !important;
+    }
+
+    form input {
+        font-size: 18px !important;
+        padding: 18px !important;
+    }
+}
+
+

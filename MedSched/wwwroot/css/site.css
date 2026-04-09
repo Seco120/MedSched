@@ -1,0 +1,474 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: black;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px); /* Daha yoğun bulanıklık */
+    color: white;
+    transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    min-height: 90px;
+    height: auto;
+    flex-wrap: wrap;
+    box-shadow: 222px 12px 30px rgba(0, 0, 0, 0.20); /* Daha belirgin bir gölge */
+}
+
+.scrolled {
+    background: rgb(51, 50, 11, 0.3); /* Şeffaflık arttırıldı */
+    padding: 12px 20px;
+}
+
+/* Scrollbar Tasarımı */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #aeaeae;
+    border-radius: 10px;
+    width: 9px; /* Scrollbar biraz daha ince */
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: white;
+    }
+
+/* LOGO */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+    .logo img {
+        height: 70px; /* Logo biraz küçültüldü */
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+/* NAV MENÜ (SOLA YAPIŞIK) */
+nav {
+    flex-grow: 1;
+}
+
+    /* Aktif link stili */
+    nav ul li a.active {
+        color: #aeaeae;
+        font-weight: bold;
+
+    }
+
+        nav ul li.active::after,
+        nav ul li a.active::after {
+            width: 100% !important;
+            background: #e4e4e4ff;
+            
+        }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 50px;
+        margin: 0;
+        padding: 20px;
+    }
+
+        nav ul li {
+            position: relative;
+        }
+
+            nav ul li a {
+                content: "";
+                text-decoration: none;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+
+                nav ul li a:hover {
+                    color: #e4e4e4ff;
+                    transform: scale(1.3);
+                }
+
+            nav ul li::after {
+                content: "";
+                display: block;
+                width: 0;
+                height: 3px;
+                background: white;
+                transition: width 0.3s ease-in-out;
+                position: absolute;
+                bottom: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            nav ul li:hover::after {
+                width: 100%;
+            }
+
+/* MENÜ BUTONU (SAĞ ÜSTE) */
+.user-menu {
+    position: relative;
+}
+
+/* 🟡 Menü Butonu Tasarımı */
+#menuButton {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid white;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+    margin-right: 35px;
+    font-weight: bold;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#randevuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#randevuPopup {
+    background: white;
+    color: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 12px;
+    width: 300px;
+    max-width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+#closePopup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #aaa;
+}
+
+    #closePopup:hover {
+        color: black;
+    }
+
+
+#menuButton:hover {
+    background: #e4e4e4ff;
+    color: black;
+    transform: scale(1.1);
+    border-color: #e4e4e4ff;
+}
+
+.menu-dropdown p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+
+.menu-dropdown a {
+    display: block;
+    padding: 12px;
+    font-size: 18px;
+    text-decoration: none;
+    color: white;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .menu-dropdown a:hover {
+        background: #e4e4e4ff;
+        color: black;
+        transform: scale(1.05);
+    }
+
+
+/* 🔲 Açılan Menü Tasarımı */
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%; /* Header'ın bittiği yerden başlasın */
+    right: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 320px;
+    height: auto; /* SABİT 260px DEĞERİNİ SİL, AUTO YAP */
+    min-height: fit-content; /* İçerik ne kadarsa o kadar uzasın */
+    z-index: 100;
+    text-align: center;
+}
+
+    /* İçindeki yazıların arasını biraz açalım ki ferahlasın */
+    .menu-dropdown p {
+        margin: 15px 0px; /* 35px çok fazlaydı, 15px idealdir */
+        font-size: 16px;
+    }
+
+
+/* RANDEVU AL BUTONU */
+#randevuAl {
+    background: #e4e4e4ff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    width: auto;
+    border-radius: 5px;
+    margin-right: 35px;
+    white-space: nowrap;
+}
+
+    #randevuAl:hover {
+        color: black;
+        background: #aeaeae;
+    }
+
+#aktifRandevuBtn {
+    background: #e4e4e4ff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    width: auto;
+    border-radius: 5px;
+    margin-right: 35px;
+    white-space: nowrap;
+}
+
+    #aktifRandevuBtn:hover {
+        background: #aeaeae;
+        color: black;
+    }
+
+
+#logoutButton {
+    background: #e4e4e4ff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    width: 100%;
+    border-radius: 5px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+    #logoutButton:hover {
+        background: #aeaeae;
+    }
+
+.iptalBtn {
+    /* Senin eski ayarların */
+    background-color: #e4e4e4ff;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 5px;
+    /* Yeni eklediğimiz sihirli dokunuşlar */
+    transition: all 0.3s ease; /* Her şeyin yumuşak değişmesini sağlar */
+    display: inline-block;
+    outline: none;
+}
+
+    /* FARE ÜZERİNE GELDİĞİNDE (HOVER) */
+    .iptalBtn:hover {
+        background-color: #aeaeae; /* Hafif koyulaşır */
+        transform: translateY(-2px); /* 2 piksel yukarı zıplar */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Hafif gölge verir */
+    }
+
+
+/* --- RESPONSIVE DÜZENLEME (GÜNCELLENMİŞ) --- */
+@media (max-width: 1024px) {
+    nav ul {
+        gap: 15px;
+    }
+}
+
+    @media (max-width: 768px) {
+        header {
+            height: auto;
+            min-height: 80px; /* 60 çok küçüktü, 80 ideal dengedir */
+            flex-direction: row !important; /* Her şeyi yan yana dizmeyi zorla */
+            flex-wrap: wrap; /* Sığmayanlar (butonlar gibi) alt satıra kaysın */
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 2.5px;
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+        }
+
+        /* 1. LOGO: Sol üstte kalsın */
+        .logo img {
+            height: 40px;
+            margin-bottom: 0;
+        }
+
+        /* 2. NAV (Ana Sayfa vb.): Logonun yanında veya butonların üstünde küçük kalsın */
+        nav {
+            display: block !important; /* Gizlemiyoruz, gösteriyoruz */
+            width: auto;
+            order: 2; /* Sıralamayı kontrol etmek için */
+        }
+
+            nav ul {
+                flex-direction: row !important; /* Linkleri yan yana diz */
+                gap: 12px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+                nav ul li a {
+                    font-size: 13px !important; /* Okunacak kadar büyük, yer kaplamayacak kadar küçük */
+                    white-space: nowrap;
+                }
+
+        /* 3. MENÜ DÜĞMESİ: En sağda kalsın */
+        .user-menu {
+            order: 3;
+        }
+
+        #menuButton {
+            margin: 10px;
+            margin-right: 30px;
+            padding: 6px 10px;
+            font-size: 20px;
+        }
+
+        /* 4. BUTONLAR: Genelde yan yana sığmazlar, o yüzden onları alt satıra tam genişlikte atalım */
+        #randevuAl, #aktifRandevuBtn {
+            order: 4; /* En alta gitsinler */
+            width: calc(50% - 5px) !important; /* Yan yana sığsınlar */
+            font-size: 11px !important;
+            padding: 8px 5px !important;
+            margin: 8px 5px 0 0 !important;
+            display: inline-block;
+            text-align: center;
+        } 
+
+            .menu-dropdown {
+                width: 260px;
+                right: 45px;
+                top: 100%;
+            }
+    }
+    /* 1. Popup'ı ekranın yanlarına tamamen yapıştırıyoruz */
+    #randevuPopup {
+        width: 100% !important; /* Ekranın tamamı */
+        max-width: 100% !important;
+        height:auto; /* Boydan boya */
+        max-height: 100vh;
+        border-radius: 0; /* Köşeleri sıfırla ki boşluk kalmasın */
+        padding: 50px 5px 10px 5px; /* Üstten çarpı tuşu için yer bıraktık */
+        border: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #randevuOverlay {
+        padding: 0; /* Dış boşluğu kaldır */
+    }
+    /* 2. Tabloyu "Büyük" tutuyoruz, kullanıcı yana kaydıracak */
+    #randevuContent {
+        flex: 1;
+        overflow-x: auto; /* Yatay kaydırma */
+        overflow-y: auto; /* Dikey kaydırma */
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+
+        
+        /* 3. Yazıları okunur boyuta geri getiriyoruz */
+        #randevuContent th, #randevuContent td {
+            font-size: 11px !important; /* Küçük değil, orta boy */
+            padding: 10px 5px; /* Dokunma alanlarını büyüt */
+            
+        }
+    /* 4. Başlık ve Kapatma Butonu Sabit kalsın */
+    #randevuPopup h2 {
+        font-size: 1rem;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+    }
+
+    #closePopup {
+        top: 15px;
+        right: 15px;
+        font-size: 35px; /* Çarpı butonunu devasa yap ki kolay basılsın */
+        z-index: 10001;
+    }
+    /* İptal Butonu Mobilde Basılabilir Olsun */
+    .iptalBtn {
+        padding: 10px 15px !important;
+        font-size: 9px !important;
+        background: #ff4d4d;
+        font-weight: bold;
+    }
+}
+
+/* Çok küçük ekranlar için (iPhone SE vb.) */
+@media (max-width: 480px) {
+    #randevuContent th, #randevuContent td {
+        font-size: 10px !important;
+        padding: 6px 2px;
+    }
+}
+
+    /* Ekstra küçük ekranlar için (iPhone SE vb.) */
+    @media (max-width: 380px) {
+        nav ul {
+            gap: 8px !important;
+        }
+
+            nav ul li a {
+                font-size: 11px !important;
+            }
+
+        #randevuAl, #aktifRandevuBtn {
+            font-size: 10px !important;
+        }
+    }
+}
+
+
+    
+

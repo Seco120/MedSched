@@ -1,0 +1,15 @@
+## Visual Studio Temp Files
+.vs/
+[Bb]in/
+[Ob]j/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## NuGet Packages
+packages/
+
+## SQL Local DB
+*.mdf
+*.ldf

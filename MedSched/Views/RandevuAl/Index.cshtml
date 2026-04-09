@@ -1,0 +1,196 @@
+﻿@model RandevuViewModel
+@{
+    ViewData["Title"] = "Randevu Al";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RandevuAl.css" asp-append-version="true">
+    }
+    <div class="arka-plan"></div>
+    <form asp-action="Olustur" method="post" id="randevuForm">
+        <h2>Randevu Al</h2>
+
+        <label for="hastaneSelect">Hastane Seçin:</label>
+        <select id="hastaneSelect" name="HastaneId" required>
+            <option selected disabled>Hastane Seçin</option>
+            @foreach (var hastane in Model.Hastaneler)
+            {
+                <option value="@hastane.HastaneId">@hastane.HastaneAdi</option>
+            }
+        </select>
+
+        <label for="bolumSelect" class="hidden">Bölüm Seçin:</label>
+        <select id="bolumSelect" name="BolumId" class="hidden" required>
+            <option selected disabled>Bölüm Seçin</option>
+        </select>
+
+        <label for="doktorSelect" class="hidden">Doktor Seçin:</label>
+        <select id="doktorSelect" name="DoktorId" class="hidden" required>
+            <option selected disabled>Doktor Seçin</option>
+        </select>
+
+        <label for="tarihInput" class="hidden">Tarih Seçin:</label>
+        <input type="date" id="tarihInput" name="SecilenTarih" class="hidden" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+
+        <div id="saatCheckboxlar" class="hidden" style="margin-top: 10px;"></div>
+
+        <button type="submit" id="submitBtn" disabled>Randevu Oluştur</button>
+    </form>
+    @section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            function kontrolEt() {
+                var tarih = $('#tarihInput').val();
+                var saat = $('input[name="SecilenSaat"]:checked').val();
+                var doktor = $('#doktorSelect').val();
+                var bolum = $('#bolumSelect').val();
+                var hastane = $('#hastaneSelect').val();
+
+                if (tarih && saat && doktor && bolum && hastane) {
+                    $('#submitBtn').prop('disabled', false);
+                } else {
+                    $('#submitBtn').prop('disabled', true);
+                }
+            }
+
+            // Hastane seçimi
+            $('#hastaneSelect').change(function () {
+                var id = $(this).val();
+
+                if (!id) return;
+
+                $('#bolumSelect').empty().append('<option selected disabled>Yükleniyor...</option>');
+                $.getJSON('/RandevuAl/GetBolumler', { hastaneId: id }, function (data) {
+                    $('#bolumSelect').empty().append('<option selected disabled>Bölüm Seçin</option>');
+                    $.each(data, function (i, bolum) {
+                        $('#bolumSelect').append(`<option value="${bolum.id}">${bolum.adi}</option>`);
+                    });
+
+                    // Bölüm dropdown ve label göster
+                    $('#bolumSelect, label[for="bolumSelect"]').removeClass('hidden').hide().fadeIn();
+
+                    // Doktor ve sonrası gizle
+                    $('#doktorSelect, label[for="doktorSelect"]').fadeOut().addClass('hidden').empty();
+                    $('#tarihInput, label[for="tarihInput"]').fadeOut().addClass('hidden').val('');
+                    $('#saatCheckboxlar').fadeOut().addClass('hidden').empty();
+
+                    kontrolEt();
+                });
+            });
+
+            // Bölüm seçimi
+            $('#bolumSelect').change(function () {
+                var id = $(this).val();
+
+                if (!id) return;
+
+                $('#doktorSelect').empty().append('<option selected disabled>Yükleniyor...</option>');
+                $.getJSON('/RandevuAl/GetDoktorlar', { bolumId: id }, function (data) {
+                    $('#doktorSelect').empty().append('<option selected disabled>Doktor Seçin</option>');
+                    $.each(data, function (i, doktor) {
+                        $('#doktorSelect').append(`<option value="${doktor.id}">${doktor.adi}</option>`);
+                    });
+
+                    // Doktor dropdown ve label göster
+                    $('#doktorSelect, label[for="doktorSelect"]').removeClass('hidden').hide().fadeIn();
+
+                    // Tarih ve saatleri gizle
+                    $('#tarihInput, label[for="tarihInput"]').fadeOut().addClass('hidden').val('');
+                    $('#saatCheckboxlar').fadeOut().addClass('hidden').empty();
+
+                    kontrolEt();
+                });
+            });
+
+            // Doktor seçimi
+            $('#doktorSelect').change(function () {
+                if (!$(this).val()) return;
+
+                // Tarih input göster
+                $('#tarihInput, label[for="tarihInput"]').removeClass('hidden').hide().fadeIn().val('');
+
+                // Saatleri temizle ve gizle
+                $('#saatCheckboxlar').fadeOut().addClass('hidden').empty();
+
+                kontrolEt();
+            });
+
+            // Tarih seçimi
+            $('#tarihInput').change(function () {
+                var doktorId = $('#doktorSelect').val();
+                var tarih = $(this).val();
+
+                if (!doktorId || !tarih) {
+                    $('#saatCheckboxlar').fadeOut().addClass('hidden').empty();
+                    kontrolEt();
+                    return;
+                }
+
+                $.getJSON('/RandevuAl/GetSaatler', { doktorId: doktorId, tarih: tarih }, function (data) {
+                    var container = $('#saatCheckboxlar');
+                    container.empty();
+
+                    if (data.length === 0) {
+                        container.append('<p>Seçilen gün için uygun saat bulunmamaktadır.</p>');
+                    } else {
+                        $.each(data, function (i, saat) {
+                            var label = $('<label></label>');
+
+                            if (saat.dolu || saat.eskiSaat) {
+                                label.addClass('disabled');
+                            }
+
+                            var radio = $('<input/>', {
+                                type: 'radio',
+                                name: 'SecilenSaat',
+                                value: saat.saat,
+                                disabled: !(saat.secilebilir)
+                            });
+
+                            label.append(radio);
+                            label.append(' ' + saat.saat);
+                            container.append(label);
+                        });
+                    }
+
+                    container.removeClass('hidden').hide().fadeIn();
+
+                    // Saat seçimi değişimini dinle
+                    $('input[name="SecilenSaat"]').off('change').on('change', kontrolEt);
+
+                    kontrolEt();
+                });
+            });
+
+            // Saat seçimi değişikliği
+            $(document).on('change', 'input[name="SecilenSaat"]', kontrolEt);
+
+            kontrolEt(); // sayfa yüklendiğinde buton durumunu kontrol et
+        });
+
+              function showToast(mesaj, basarili) {
+            let renk = basarili ? "#28a745" : "#dc3545";
+            let toast = $(`<div style="position: fixed; bottom: 20px; right: 20px; background: ${renk}; color: white; padding: 15px; border-radius: 5px; z-index: 9999;">${mesaj}</div>`);
+            $('body').append(toast);
+            setTimeout(() => toast.fadeOut(500, () => toast.remove()), 3000);
+        }
+
+
+        $(document).ready(function () {
+        @if (TempData["BasariliMesaj"] != null)
+        {
+            <text>
+                    showToast("@TempData["BasariliMesaj"]", true);
+            </text>
+        }
+                  });
+
+
+        $(document).on("click", function (event) {
+            if (!$(event.target).closest("#menuButton, #userMenu").length) {
+                $("#userMenu").hide();
+            }
+        });
+    </script>
+    }

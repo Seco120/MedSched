@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Hastanelerimiz";
+}
+@section Styles {
+    @* Harici CSS dosyanı buraya bağlıyoruz *@
+    <link rel="stylesheet" href="~/css/hastanelerimiz.css" asp-append-version="true">
+}
+    <!-- HASTANELER -->
+    <div class="hastane-container">
+    <div class="arka-plan"></div>
+        <div class="hastane-listesi">
+            <ul>
+                <li onmouseover="goster('hastane1')">Çamlıca Medipol Hastanesi</li>
+                <li onmouseover="goster('hastane2')">Koşuyolu Medipol Hastanesi</li>
+                <li onmouseover="goster('hastane3')">Bağcılar Medipol Mega Hastanesi</li>
+                <li onmouseover="goster('hastane4')">Sefaköy Hastanesi</li>
+                <li onmouseover="goster('hastane5')">Bahçelievler Medipol Hastanesi</li>
+                <li onmouseover="goster('hastane6')">Esenler Medipol Üniversitesi Hastanesi</li>
+                <li onmouseover="goster('hastane7')">Vatan Medipol Üniversitesi Hastanesi</li>
+                <li onmouseover="goster('hastane8')">Pendik Medipol Üniversitesi Hastanesi</li>
+                <li onmouseover="goster('hastane9')">MEDİPOL Acıbadem Bölge Hastanesi</li>
+                <li onmouseover="goster('hastane10')">Unkapanı Medipol Üniversitesi Diş Hastanesi</li>
+                <li onmouseover="goster('hastane11')">Ankara Medipol Üniversitesi Diş Hastanesi</li>
+            </ul>
+        </div>
+        <div class="hastane-detay">
+            <img id="hastane-resim" src="~/images/placeholder.png" style="display: none;">
+            <p id="hastane-bilgi" style="display: none;"></p>
+        </div>
+    </div>
+    @section Scripts {
+    <script>
+        // Hastane bilgileri
+        const bilgiler = {
+            hastane1: {
+                resim: '/images/medipol-camlica.jpg',
+                bilgi: 'Çamlıca Medipol Hastanesi 1995 yılından beri hizmet veriyor...'
+            },
+            hastane2: {
+                resim: '/images/medipolkosuyolu.jpg',
+                bilgi: 'Koşuyolu Medipol Hastanesi modern teknolojilerle donatılmıştır...'
+            },
+            hastane3: {
+                resim: '/images/medipol-bagcilar.jpg',
+                bilgi: 'Bağcılar Medipol Mega Hastanesi alanında öncüdür...'
+            },
+            hastane4: {
+                resim: '/images/sefakoy.jpg',
+                bilgi: 'Sefaköy Hastanesi hasta memnuniyetine önem verir...'
+            },
+            hastane5: {
+                resim: '/images/MEDIPOL_IK_Bahcelievler.jpg',
+                bilgi: 'Bahçelievler Medipol Hastanesi güçlü sağlık kadrosuna sahiptir...'
+            },
+            hastane6: {
+                resim: '/images/esenler.jpg',
+                bilgi: 'Esenler Medipol Üniversitesi Hastanesi öğrencilerle iş birliği içindedir...'
+            },
+            hastane7: {
+                resim: '/images/vatan.jpg',
+                bilgi: 'Vatan Medipol Üniversitesi Hastanesi yeni cihazlarla donatılmıştır...'
+            },
+            hastane8: {
+                resim: '/images/medipol2.jpg',
+                bilgi: 'Pendik Medipol Üniversitesi Hastanesi Anadolu yakasında hizmet verir...'
+            },
+            hastane9: {
+                resim: '/images/medipol-hastanesi4.jpg',
+                bilgi: 'MEDİPOL Acıbadem Bölge Hastanesi özel bölümleriyle öne çıkar...'
+            },
+            hastane10: {
+                resim: '/images/unkapanı.jpeg',
+                bilgi: 'Unkapanı Diş Hastanesi diş sağlığı üzerine uzmanlaşmıştır...'
+            },
+            hastane11: {
+                resim: '/images/ankara.jpeg',
+                bilgi: 'Ankara Medipol Diş Hastanesi başkentteki önemli merkezlerdendir...'
+            }
+        };
+
+        function goster(id) {
+            const bilgi = bilgiler[id];
+            const resimElem = document.getElementById('hastane-resim');
+            const bilgiElem = document.getElementById('hastane-bilgi');
+
+            if (bilgi) {
+                resimElem.src = bilgi.resim;
+                bilgiElem.textContent = bilgi.bilgi;
+                resimElem.style.display = "block";
+                bilgiElem.style.display = "block";
+            } else {
+                resimElem.src = '~/images/placeholder.png';
+                bilgiElem.textContent = 'Bilgi bulunamadı.';
+                resimElem.style.display = "none";
+                bilgiElem.style.display = "none";
+            }
+        }
+
+        function showToast(mesaj, basarili) {
+            let renk = basarili ? "#28a745" : "#dc3545";
+            let toast = $(`<div style="position: fixed; bottom: 20px; right: 20px; background: ${renk}; color: white; padding: 15px; border-radius: 5px; z-index: 9999;">${mesaj}</div>`);
+            $('body').append(toast);
+            setTimeout(() => toast.fadeOut(500, () => toast.remove()), 3000);
+        }
+
+    </script>
+}

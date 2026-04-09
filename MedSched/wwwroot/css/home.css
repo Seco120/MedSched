@@ -1,0 +1,166 @@
+﻿/* Sadece Ana Sayfa Slider Kodları */
+.slider-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.info-overlay {
+    position: absolute;
+    top: 22%;
+    left: 5%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide:hover .info-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.slider-container button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 2em;
+    z-index: 2;
+}
+
+.slider-container .prev {
+    left: 10px;
+}
+
+.slider-container .next {
+    right: 10px;
+}
+/* ============================================================
+   SLIDER KESİN ÇÖZÜM (RESPONSIVE - FULL SCREEN)
+   ============================================================ */
+@media (max-width: 768px) {
+    /* 1. Kapsayıcıyı ekranın tam boyuna zorla (dvh = dynamic viewport height) */
+    .slider-container,
+    .slide {
+        height: 100dvh !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* 2. Fotoğrafın ekranı tam kaplaması ve yamulmaması için */
+        .slide img {
+            object-fit: cover !important;
+            height: 100dvh !important;
+            width: 100% !important;
+            display: block;
+        }
+
+    /* 3. Bilgi kutusunu (Overlay) merkeze al ve okunur yap */
+    .info-overlay {
+        opacity: 1 !important;
+        position: absolute !important;
+        top: 30% !important; /* Header çok yer kapladığı için biraz aşağı aldık */
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 70% !important;
+        text-align: center;
+        padding: 20px !important;
+        background: rgba(0, 0, 0, 0.65) !important;
+        backdrop-filter: blur(5px); /* Header ile uyumlu cam efekti */
+        border-radius: 12px;
+        z-index: 10;
+    }
+
+        .info-overlay h2 {
+            font-size: 1.1rem !important;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .info-overlay p {
+            font-size: 0.90rem !important;
+            line-height: 1.2;
+            color: #eee;
+        }
+
+    .slider-container .prev {
+        margin-left: 10px;
+    }
+
+    .slider-container .next {
+        margin-right: 10px
+    }
+        /* 4. Navigasyon Okları (Mobilde parmakla basmaya uygun) */
+        .slider-container button {
+            padding: 10px 15px !important;
+            font-size: 1.2rem !important;
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            border-radius: 50% !important;
+            z-index: 20;
+        }
+
+        .slider-container .prev {
+            left: 10px !important;
+        }
+
+        .slider-container .next {
+            right: 10px !important;
+        }
+    }
+
+/* 5. Yatay (Landscape) Modda Telefonlar İçin (Opsiyonel) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .slider-container, .slide, .slide img {
+        height: 100vh !important;
+    }
+
+    .info-overlay {
+        width: 70% !important;
+        padding: 10px !important;
+        top: 50% !important;
+    }
+
+        .info-overlay p {
+            display: none;
+        }
+    /* Yatayda çok yer kaplamasın diye açıklamayı gizle */
+}
+
+/* 6. Dev Ekranlar İçin (Layout'un bozulmaması için) */
+@media (min-width: 2000px) {
+    .info-overlay {
+        font-size: 24px;
+        padding: 40px !important;
+    }
+}

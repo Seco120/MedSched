@@ -1,0 +1,182 @@
+﻿body {
+    background-color: #111;
+    color: #e4e4e4ff; 
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/medipol-giris.jpg');
+    background-size: cover;
+    z-index: -2;
+}
+
+form {
+    background-color: #222;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #e4e4e4ff;
+    width: 350px;
+    text-align: center;
+    color: #e4e4e4ff;
+}
+
+h2 {
+    margin-bottom: 25px;
+    font-weight: normal;
+    letter-spacing: 1.5px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+select, input[type="date"] {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 20px;
+    border: 2px solid #e4e4e4ff;
+    border-radius: 5px;
+    background-color: #111;
+    color: #e4e4e4ff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+#tarihInput {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 20px;
+    border: 2px solid #e4e4e4ff;
+    border-radius: 5px;
+    background-color: #111;
+    color: #e4e4e4ff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* Flatpickr takvim görünümü için */
+.flatpickr-calendar {
+    background-color: #111;
+    border: 2px solid #e4e4e4ff;
+    color: #e4e4e4ff;
+    font-family: inherit;
+    z-index: 9999;
+}
+
+.flatpickr-day {
+    color: #e4e4e4ff;
+    background-color: #111;
+    border-radius: 5px;
+}
+
+    .flatpickr-day:hover,
+    .flatpickr-day.selected {
+        background-color: #e4e4e4ff;
+        color: #111;
+    }
+
+.flatpickr-months,
+.flatpickr-weekdays {
+    background-color: #111;
+    color: #e4e4e4ff;
+    border-bottom: 1px solid #e4e4e4ff;
+}
+
+.flatpickr-current-month input.cur-year {
+    background: transparent;
+    color: #e4e4e4ff;
+    border: none;
+}
+
+
+    select:focus, input[type="date"]:focus {
+        border-color: #e4e4e4ff;
+    }
+
+#saatCheckboxlar label {
+    display: inline-block;
+    margin: 5px 10px 5px 0;
+    cursor: pointer;
+    color: #e4e4e4ff;
+    font-weight: normal;
+    user-select: none;
+}
+
+    #saatCheckboxlar label.disabled {
+        text-decoration: line-through;
+        color: gray;
+        cursor: not-allowed;
+    }
+
+#saatCheckboxlar input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+    #saatCheckboxlar input[type="radio"]:disabled + span {
+        text-decoration: line-through;
+        color: gray;
+    }
+
+#submitBtn {
+    margin-top: 15px;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #111;
+    background-color: #e4e4e4ff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+#submitBtn:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Gizleme için */
+.hidden {
+    display: none;
+}
+
+/* Ok işareti için select */
+select {
+    background-image: linear-gradient(45deg, transparent 50%, #f5d742 50%), linear-gradient(135deg, #f5d742 50%, transparent 50%), linear-gradient(to right, #222, #222);
+    background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 25px) 0.5em;
+    background-size: 5px 5px, 5px 5px, 1px 1.5em;
+    background-repeat: no-repeat;
+}
+
+    /* Blur efekti için yarı saydam katman */
+    .arka-plan::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(8px); /* Safari için */
+        background-color: rgba(0, 0, 0, 0.2); /* Hafif karartma isteğe bağlı */
+        z-index: -1;
+    }

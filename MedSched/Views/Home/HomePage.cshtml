@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+    // Layout = null; satırını sildik, artık ana şablonu kullanıyor.
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" />
+}
+
+    <!-- HEADER BİTİŞ -->
+    <div class="slider-container">
+        <div class="slider">
+            <!-- Fotoğraf 1 -->
+            <div class="slide">
+                <img src="/images/medipol-anasayfa1.jpg" alt="Hastane 1">
+                <div class="info-overlay">
+                    <h2>İstanbul Medipol Hastanesi</h2>
+                    <p>
+                        1997'den günümüze; Medipol, 1997 yılından bu yana güçlü sağlık kadrosu, tıp teknolojisinde en ileri donanımlarıyla, tüm dallarda topluma hizmet vermektedir
+                    </p>
+                </div>
+            </div>
+            <!-- Fotoğraf 2 -->
+            <div class="slide">
+                <img src="/images/medipol-koridor2.jpg" alt="Hastane 2">
+                <div class="info-overlay">
+                    <h2>Modern Sağlık Hizmeti</h2>
+                    <p>İstanbul Medipol Üniversitesi Hastanesi, geniş ve modern iç tasarımıyla hastalarına konforlu bir sağlık deneyimi sunar.</p>
+                </div>
+            </div>
+            <!-- Fotoğraf 3 -->
+            <div class="slide">
+                <img src="/images/medipol-kosuyolu.jpg" alt="Hastane 3">
+                <div class="info-overlay">
+                    <h2>Konforlu Sağlık Hizmeti</h2>
+                    <p>Akıllı bina sistemiyle donatılmış hastanede, ferah bekleme alanları ve hijyenik yapılar sayesinde hastalar kendilerini rahat hisseder..</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="/images/medipol-koridor.jpg" alt="Hastane 3">
+                <div class="info-overlay">
+                    <h2>Güvenilir Sağlık Hizmeti</h2>
+                    <p>Özel hasta odaları, akıllı bina sistemi ve hijyenik yapısıyla öne çıkan hastane, multidisipliner sağlık hizmetleriyle güvenilir bir tedavi süreci sunar.</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="/images/medipol-giris.jpg" alt="Hastane 4">
+                <div class="info-overlay">
+                    <h2>Kolay Ulaşım ve Merkezî Konum</h2>
+                    <p>
+                        İstanbul’un birçok noktasında yer alan hastane, merkezi konumu ve ulaşım kolaylığı ile hastalarına hızlı ve rahat bir sağlık hizmeti sunar.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Butonlar -->
+        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+@section Scripts {
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function changeSlide(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            const slider = document.querySelector('.slider');
+            if (slider) {
+                const offset = -currentSlide * 100;
+                slider.style.transform = `translateX(${offset}%)`;
+            }
+        }
+
+        // Otomatik geçiş
+        setInterval(() => {
+            changeSlide(1);
+        }, 6000);
+
+        $(document).ready(function() {
+            updateSlider();
+        });
+    </script>
+}
