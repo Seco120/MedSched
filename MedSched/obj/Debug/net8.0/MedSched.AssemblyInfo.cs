@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("9f4312aa-b76f-4cf7-b2ef-06a7773b902c")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("MedSched")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e9609aded67eedf77bd9977ec79316a23d3b862")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a15ea50485be0fea94060bee213d19d9932c80ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("MedSched")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MedSched")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
