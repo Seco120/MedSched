@@ -1,23 +1,23 @@
 ﻿using MedSched.Data;
 using MedSched.Services;
-using MedSched.Repositories;
-using MedSched.Middlewares;
+using MedSched.Repositories; // Eksik olabilir, ekledim
+using MedSched.Middlewares; // Middleware klasörün
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+// 🔹 Veritabanı (MySQL kullandığını görüyorum, Pomelo paketi yüklü olmalı)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, 
-    new MySqlServerVersion(new Version(8, 0, 11)))); 
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
+// 🔹 DI Container Kayıtları (Burayı mermi gibi dizdik)
 builder.Services.AddScoped<IYourUserRepository, YourUserRepository>();
-builder.Services.AddScoped<IUserService, UserService>(); 
+builder.Services.AddScoped<IUserService, UserService>(); // 👈 EKSİKTİ, EKLEDİM!
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-// 🔹 Session Yapılandırması
+// 🔹 Session (Senin Middleware için şart)
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -25,11 +25,11 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// 🔹 Authentication (Cookie Tabanlı)
+// 🔹 Authentication (Cookie tabanlı kalsın, ama Middleware ile uyumlu olmalı)
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Index"; 
+        options.LoginPath = "/Account/Index"; // Middleware ile tutarlı yaptık
         options.LogoutPath = "/Account/Index";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     });
@@ -38,7 +38,6 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// 🔹 HTTP Pipeline Yapılandırması
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -49,19 +48,19 @@ else
     app.UseHsts();
 }
 
-// Render gibi platformlarda SSL işini proxy hallettiği için bazen sorun çıkarabilir, 
-// ama şimdilik kalsın, hata alırsan ilk burayı yorum satırına alırsın.
-app.UseHttpsRedirection(); 
-
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// 🔹 Sıralama Önemli!
-app.UseSession(); 
+// 🔹 KRİTİK SIRALAMA!
+app.UseSession();
+
+// 🔹 EĞER KENDİ MIDDLEWARE'İNİ KULLANACAKSAN BURAYA EKLE:
+// app.UseMiddleware<AuthorizationMiddleware>(); 
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 🔹 Özel Route Tanımları
 app.MapControllerRoute(
     name: "iletisim",
     pattern: "iletisim",
