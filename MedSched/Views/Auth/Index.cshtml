@@ -92,15 +92,30 @@
 
         $(document).ready(function () {
             
-        // 1. GİRİŞ İŞLEMİ
         $("#innerLoginForm").on("submit", function (e) {
         e.preventDefault();
+        let $btn = $(this).find("button[type='submit']");
+        let $errorBox = $("#login-error");
+
+        $btn.prop("disabled", true).text("Giriş yapılıyor..."); // Hissiyat: İşlem başladı
+
         $.post("/Auth/Login", $(this).serialize(), function (response) {
         if (response.success) {
         window.location.href = "/Home/HomePage";
         } else {
-        $("#login-error").text(response.error || "Giriş bilgileri hatalı!").fadeIn();
+        // Hissiyat: Hata kutusunu sars ve yazıyı yenile
+        $errorBox.removeClass("shake-animation").hide();
+        setTimeout(() => {
+        $errorBox.text(response.error || "Giriş bilgileri hatalı!")
+        .fadeIn()
+        .addClass("shake-animation");
+        }, 10);
+            
+        $btn.prop("disabled", false).text("Giriş Yap");
         }
+        }).fail(function() {
+        $errorBox.text("Sunucuya ulaşılamadı!").fadeIn().addClass("shake-animation");
+        $btn.prop("disabled", false).text("Giriş Yap");
         });
         });
 
