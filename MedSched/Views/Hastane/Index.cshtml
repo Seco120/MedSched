@@ -9,18 +9,18 @@
     <div class="hastane-container">
     <div class="arka-plan"></div>
         <div class="hastane-listesi">
-            <ul>
-                <li onmouseover="goster('hastane1')">Çamlıca Medipol Hastanesi</li>
-                <li onmouseover="goster('hastane2')">Koşuyolu Medipol Hastanesi</li>
-                <li onmouseover="goster('hastane3')">Bağcılar Medipol Mega Hastanesi</li>
-                <li onmouseover="goster('hastane4')">Sefaköy Hastanesi</li>
-                <li onmouseover="goster('hastane5')">Bahçelievler Medipol Hastanesi</li>
-                <li onmouseover="goster('hastane6')">Esenler Medipol Üniversitesi Hastanesi</li>
-                <li onmouseover="goster('hastane7')">Vatan Medipol Üniversitesi Hastanesi</li>
-                <li onmouseover="goster('hastane8')">Pendik Medipol Üniversitesi Hastanesi</li>
-                <li onmouseover="goster('hastane9')">MEDİPOL Acıbadem Bölge Hastanesi</li>
-                <li onmouseover="goster('hastane10')">Unkapanı Medipol Üniversitesi Diş Hastanesi</li>
-                <li onmouseover="goster('hastane11')">Ankara Medipol Üniversitesi Diş Hastanesi</li>
+            <ul id="hastaneList">
+                <li data-id="hastane1">Çamlıca Medipol Hastanesi</li>
+                <li data-id="hastane2">Koşuyolu Medipol Hastanesi</li>
+                <li data-id="hastane3">Bağcılar Medipol Mega Hastanesi</li>
+                <li data-id="hastane4">Sefaköy Hastanesi</li>
+                <li data-id="hastane5">Bahçelievler Medipol Hastanesi</li>
+                <li data-id="hastane6">Esenler Medipol Üniversitesi Hastanesi</li>
+                <li data-id="hastane7">Vatan Medipol Üniversitesi Hastanesi</li>
+                <li data-id="hastane8">Pendik Medipol Üniversitesi Hastanesi</li>
+                <li data-id="hastane9">MEDİPOL Acıbadem Bölge Hastanesi</li>
+                <li data-id="hastane10">Unkapanı Medipol Üniversitesi Diş Hastanesi</li>
+                <li data-id="hastane11">Ankara Medipol Üniversitesi Diş Hastanesi</li>
             </ul>
         </div>
         <div class="hastane-detay">
@@ -30,6 +30,23 @@
     </div>
     @section Scripts {
     <script>
+
+                        $(document).ready(function() {
+                    // Listenin içindeki tüm 'li' etiketlerini bul
+                    const hastaneSatirlari = document.querySelectorAll('#hastaneList li');
+
+                    hastaneSatirlari.forEach(satir => {
+                        // li'nin içindeki data-id değerini al (hastane1, hastane2 vb.)
+                        const id = satir.getAttribute('data-id');
+
+                        // Tıklama (Mobil için)
+                        satir.addEventListener('click', () => goster(id));
+
+                        // Üzerine gelme (Desktop için)
+                        satir.addEventListener('mouseover', () => goster(id));
+                    });
+                });
+
         // Hastane bilgileri
         const bilgiler = {
             hastane1: {
@@ -78,23 +95,32 @@
             }
         };
 
-        function goster(id) {
-            const bilgi = bilgiler[id];
-            const resimElem = document.getElementById('hastane-resim');
-            const bilgiElem = document.getElementById('hastane-bilgi');
+                       function goster(id) {
+                    const bilgi = bilgiler[id];
+                    const resimElem = document.getElementById('hastane-resim');
+                    const bilgiElem = document.getElementById('hastane-bilgi');
+                    const detayAlani = document.querySelector('.hastane-detay'); // Odaklanılacak alan
 
-            if (bilgi) {
-                resimElem.src = bilgi.resim;
-                bilgiElem.textContent = bilgi.bilgi;
-                resimElem.style.display = "block";
-                bilgiElem.style.display = "block";
-            } else {
-                resimElem.src = '~/images/placeholder.png';
-                bilgiElem.textContent = 'Bilgi bulunamadı.';
-                resimElem.style.display = "none";
-                bilgiElem.style.display = "none";
-            }
-        }
+                    if (bilgi) {
+                        resimElem.src = bilgi.resim;
+                        bilgiElem.textContent = bilgi.bilgi;
+                        resimElem.style.display = "block";
+                        bilgiElem.style.display = "block";
+
+                        // MOBİL KONTROLÜ: Eğer ekran mobildeyse (768px altı), detay alanına kaydır
+                        if (window.innerWidth <= 768) {
+                            setTimeout(() => {
+                                detayAlani.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
+                                });
+                            }, 100); // Resmin yüklenmesi için minik bir gecikme
+                        }
+                    } else {
+                        resimElem.style.display = "none";
+                        bilgiElem.style.display = "none";
+                    }
+                }
 
         function showToast(mesaj, basarili) {
             let renk = basarili ? "#28a745" : "#dc3545";

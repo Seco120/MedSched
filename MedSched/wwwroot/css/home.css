@@ -63,104 +63,90 @@
 .slider-container .next {
     right: 10px;
 }
+
+
 /* ============================================================
-   SLIDER KESİN ÇÖZÜM (RESPONSIVE - FULL SCREEN)
+   SLIDER MOBİL DÜZENLEME (JS VE HEADER ÇAKIŞMA ÇÖZÜMÜ)
    ============================================================ */
+
 @media (max-width: 768px) {
-    /* 1. Kapsayıcıyı ekranın tam boyuna zorla (dvh = dynamic viewport height) */
-    .slider-container,
-    .slide {
-        height: 100dvh !important;
+    /* 1. Kapsayıcı: 'body' ekleyerek JS'nin inline stillerine karşı güçlendirdik */
+    body .slider-container {
+        margin-top: 85px !important; /* Header mesafesi */
+        height: calc(100dvh - 85px) !important;
         width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
         position: relative;
         overflow: hidden;
     }
 
-        /* 2. Fotoğrafın ekranı tam kaplaması ve yamulmaması için */
-        .slide img {
-            object-fit: cover !important;
-            height: 100dvh !important;
-            width: 100% !important;
-            display: block;
-        }
-
-    /* 3. Bilgi kutusunu (Overlay) merkeze al ve okunur yap */
-    .info-overlay {
-        opacity: 1 !important;
-        position: absolute !important;
-        top: 30% !important; /* Header çok yer kapladığı için biraz aşağı aldık */
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        width: 70% !important;
-        text-align: center;
-        padding: 20px !important;
-        background: rgba(0, 0, 0, 0.65) !important;
-        backdrop-filter: blur(5px); /* Header ile uyumlu cam efekti */
-        border-radius: 12px;
-        z-index: 10;
+    /* 2. Slaytlar: Yüksekliği kapsayıcıya (85px eksilmiş hali) sabitliyoruz */
+    body .slide,
+    body .slide img {
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        display: block;
     }
 
-        .info-overlay h2 {
+    /* 3. Bilgi Kutusu (Overlay): JS'nin opacity:0 veya display:none yapmasını engelliyoruz */
+    body .info-overlay {
+        display: block !important; /* JS'nin hide() yapmasını engeller */
+        opacity: 1 !important; /* JS'nin fadeOut() yapmasını engeller */
+        visibility: visible !important;
+        position: absolute !important;
+        top: 20% !important; /* Header'dan uzak, merkeze yakın */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 85% !important;
+        text-align: center;
+        padding: 15px !important;
+        background: rgba(0, 0, 0, 0.75) !important;
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        z-index: 10;
+        box-sizing: border-box;
+    }
+
+        body .info-overlay h2 {
             font-size: 1.1rem !important;
-            margin-bottom: 10px;
-            color: #fff;
+            margin-bottom: 8px;
+            color: white;
         }
 
-        .info-overlay p {
-            font-size: 0.90rem !important;
-            line-height: 1.2;
+        body .info-overlay p {
+            font-size: 0.85rem !important;
+            line-height: 1.4;
             color: #eee;
         }
 
-    .slider-container .prev {
-        margin-left: 10px;
+    /* 4. Navigasyon Okları: Daha parmak dostu ve kutunun altında */
+    body .slider-container button {
+        top: 55% !important;
+        padding: 14px 18px !important;
+        font-size: 1rem !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        border-radius: 50% !important;
+        z-index: 20;
+        border: 1px solid rgba(255,255,255,0.2); /* Mobilde daha belirgin */
     }
 
-    .slider-container .next {
-        margin-right: 10px
-    }
-        /* 4. Navigasyon Okları (Mobilde parmakla basmaya uygun) */
-        .slider-container button {
-            padding: 10px 15px !important;
-            font-size: 1.2rem !important;
-            background-color: rgba(0, 0, 0, 0.4) !important;
-            border-radius: 50% !important;
-            z-index: 20;
-        }
-
-        .slider-container .prev {
-            left: 10px !important;
-        }
-
-        .slider-container .next {
-            right: 10px !important;
-        }
+    body .slider-container .prev {
+        left: 10px !important;
     }
 
-/* 5. Yatay (Landscape) Modda Telefonlar İçin (Opsiyonel) */
-@media (max-height: 500px) and (orientation: landscape) {
-    .slider-container, .slide, .slide img {
-        height: 100vh !important;
+    body .slider-container .next {
+        right: 10px !important;
     }
-
-    .info-overlay {
-        width: 70% !important;
-        padding: 10px !important;
-        top: 50% !important;
-    }
-
-        .info-overlay p {
-            display: none;
-        }
-    /* Yatayda çok yer kaplamasın diye açıklamayı gizle */
 }
 
-/* 6. Dev Ekranlar İçin (Layout'un bozulmaması için) */
-@media (min-width: 2000px) {
-    .info-overlay {
-        font-size: 24px;
-        padding: 40px !important;
+/* Yatay Mod Düzenlemesi */
+@media (max-height: 500px) and (orientation: landscape) {
+    body .slider-container {
+        margin-top: 60px !important;
+        height: calc(100vh - 60px) !important;
+    }
+
+    body .info-overlay p {
+        display: none !important;
     }
 }

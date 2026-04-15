@@ -160,7 +160,11 @@
             }
             });
 
-        $("#closePopup").on("click", function () { $("#randevuOverlay").fadeOut(); });
+            // Mevcut Kapatma Butonu
+            $("#closePopup").on("click", function () {
+            $("#randevuOverlay").fadeOut();
+            $("body").css("overflow", "auto");
+            });
 
            // Menü aç/kapa animasyonu
         $("#menuButton").on("click", function () {

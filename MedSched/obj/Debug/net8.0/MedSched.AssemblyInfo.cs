@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MedSched")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c1f48915a0f792ebe27b18fba26647042cd4b978")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07ac6579907b7c1f25a963fdc21eec402d0eccdb")]
 [assembly: System.Reflection.AssemblyProductAttribute("MedSched")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MedSched")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

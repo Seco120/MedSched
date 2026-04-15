@@ -10,8 +10,8 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(8px); /* Daha yoğun bulanıklık */
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px); /* Daha yoğun bulanıklık */
     color: white;
     transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
     z-index: 1000;
@@ -316,7 +316,12 @@ nav {
 
 /* --- RESPONSIVE DÜZENLEME (GÜNCELLENMİŞ) --- */
 /* --- RESPONSIVE DÜZENLEME (TEMİZLENMİŞ VE GÜNCELLENMİŞ) --- */
+Kanka, attığın bu ana CSS bloğunu 5. maddeyi (Hamburger Menü Taşması) içine kusursuzca yedirerek ve diğer maddelerdeki düzenlemeleri koruyarak güncelledim.
 
+Özellikle .menu-dropdown kısmını px yerine vw (ekran genişliği yüzdesi) yaparak sabitledim, böylece artık hiçbir telefonda sağa sola kaçmayacak.
+
+CSS
+/* --- GÜNCELLENMİŞ RESPONSIVE DÜZENLEME (TÜM MADDELER DAHİL) --- */
 @media (max-width: 1024px) {
     nav ul {
         gap: 15px;
@@ -324,10 +329,9 @@ nav {
 }
 
 @media (max-width: 768px) {
-    /* 3. MADDE ÇÖZÜMÜ: Header altındaki bilgi kutusunu aşağı itiyoruz */
-    /* Bu class isimlerini kendi projendeki ana kapsayıcıya göre kontrol et */
+    /* 3. MADDE: Header altındaki içeriklerin üst üste binmesini engeller */
     .main-content, .hero-section, .info-box-container {
-        margin-top: 110px !important; /* Header + boşluk */
+        margin-top: 110px !important;
     }
 
     header {
@@ -337,21 +341,22 @@ nav {
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 10px; /* Yan boşluk biraz artırıldı */
-        background: rgba(0, 0, 0, 0.85) !important; /* Daha koyu yaptık */
+        padding: 10px 10px;
+        background: rgba(0, 0, 0, 0.85) !important;
         backdrop-filter: blur(10px);
         position: fixed;
         width: 100%;
         box-sizing: border-box;
+        z-index: 1000;
     }
 
     /* 1. LOGO */
     .logo img {
-        height: 35px; /* Bir tık küçültüldü alan açmak için */
+        height: 35px;
         margin-bottom: 0;
     }
 
-    /* 2. NAV (Ana Sayfa vb.) */
+    /* 2. NAV */
     nav {
         display: block !important;
         width: auto;
@@ -382,10 +387,23 @@ nav {
         font-size: 18px;
     }
 
-    /* 4. BUTONLAR: Alt satıra düzgünce yayılma */
+    /* --- 5. MADDE: HAMBURGER MENÜ TAŞMA ÇÖZÜMÜ --- */
+    .menu-dropdown {
+        width: 60vw !important; /* Ekranın %80'ini kaplar, taşma yapmaz */
+        max-width: 280px; /* Çok geniş telefonlarda aşırı büyümesini engeller */
+        right: 10px !important; /* Sağ kenara 10px mesafe ile sabitler */
+        left: auto !important; /* Sol tarafı esnek bırakır */
+        top: 100%;
+        box-sizing: border-box;
+        background: rgba(20, 20, 20, 0.98) !important;
+        border-radius: 10px;
+        box-shadow: -5px 5px 15px rgba(0,0,0,0.4);
+    }
+
+    /* 4. HEADER BUTONLARI */
     #randevuAl, #aktifRandevuBtn {
         order: 4;
-        width: 48% !important; /* Yan yana tam sığması için */
+        width: 48% !important;
         font-size: 10px !important;
         padding: 10px 5px !important;
         margin: 10px 1% 0 0 !important;
@@ -394,66 +412,63 @@ nav {
         border-radius: 6px;
     }
 
-    .menu-dropdown {
-        width: 280px;
-        right: 10px;
-        top: 100%;
-    }
-
-    /* --- RANDEVU POPUP DÜZENLEMESİ (6. MADDE İÇİN) --- */
-    #randevuOverlay {
-        padding: 0;
-    }
-
+    /* 1. Popup'ı ekranın yanlarına tamamen yapıştırıyoruz */
     #randevuPopup {
-        width: 100% !important;
+        width: 100% !important; /* Ekranın tamamı */
         max-width: 100% !important;
-        height: 100vh !important; /* Mobilde tam ekran */
+        height: auto; /* Boydan boya */
         max-height: 100vh;
-        border-radius: 0;
-        padding: 60px 15px 20px 15px !important; /* İçeriği ferahlattık */
+        border-radius: 0; /* Köşeleri sıfırla ki boşluk kalmasın */
+        padding: 50px 5px 10px 5px; /* Üstten çarpı tuşu için yer bıraktık */
         border: none;
         display: flex;
         flex-direction: column;
-        box-sizing: border-box;
-        overflow-y: auto; /* Kendi içinde kayabilmesi için kritik */
+        cursor: default;
     }
 
+    #randevuOverlay {
+        padding: 0;
+        cursor: pointer;
+    }
+    /* 2. Tabloyu "Büyük" tutuyoruz, kullanıcı yana kaydıracak */
     #randevuContent {
         flex: 1;
-        overflow-x: auto;
-        overflow-y: visible; /* Popup zaten kayıyor */
+        overflow-x: auto; /* Yatay kaydırma */
+        overflow-y: auto; /* Dikey kaydırma */
         width: 100%;
         -webkit-overflow-scrolling: touch;
-        margin-bottom: 20px;
     }
 
-        #randevuContent th, #randevuContent td {
-            font-size: 12px !important;
-            padding: 12px 8px;
-        }
 
+        /* 3. Yazıları okunur boyuta geri getiriyoruz */
+        #randevuContent th, #randevuContent td {
+            font-size: 11px !important; /* Küçük değil, orta boy */
+            padding: 10px 5px; /* Dokunma alanlarını büyüt */
+        }
+    /* 4. Başlık ve Kapatma Butonu Sabit kalsın */
     #randevuPopup h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
         position: absolute;
-        top: 20px;
+        top: 15px;
         left: 15px;
     }
 
     #closePopup {
         top: 15px;
         right: 15px;
-        font-size: 30px;
+        font-size: 35px; /* Çarpı butonunu devasa yap ki kolay basılsın */
         z-index: 10001;
     }
-
+    /* İptal Butonu Mobilde Basılabilir Olsun */
     .iptalBtn {
-        padding: 8px 12px !important;
-        font-size: 10px !important;
+        padding: 10px 15px !important;
+        font-size: 9px !important;
+        background: #ff4d4d;
+        font-weight: bold;
     }
 }
 
-/* Küçük ekranlar için ek rötuşlar */
+/* Küçük ekran iyileştirmeleri */
 @media (max-width: 480px) {
     #randevuAl, #aktifRandevuBtn {
         font-size: 9px !important;
@@ -467,6 +482,10 @@ nav {
 @media (max-width: 380px) {
     nav ul li a {
         font-size: 11px !important;
+    }
+
+    .menu-dropdown {
+        width: 85vw !important; /* Çok dar ekranlarda biraz daha genişletir */
     }
 }
     

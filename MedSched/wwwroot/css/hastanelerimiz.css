@@ -94,3 +94,15 @@
         font-size: 25px;
         color: white;
     }
+
+@media (max-width: 768px) {
+    .hastane-listesi ul li {
+        cursor: pointer;
+        padding: 15px; /* Parmakla basmak kolay olsun */
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+        .hastane-listesi ul li:active {
+            background-color: rgba(255, 255, 255, 0.1); /* Basılınca renk değişsin */
+        }
+}
