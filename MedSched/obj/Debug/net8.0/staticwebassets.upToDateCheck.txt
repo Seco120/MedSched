@@ -1,4 +1,6 @@
 wwwroot\css\auth.css
+wwwroot\css\hastanelerimiz.css
+wwwroot\css\home.css
 wwwroot\css\iletisim.css
 wwwroot\css\ProfilAyarları.css
 wwwroot\css\RandevuAl.css
@@ -84,5 +86,3 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\css\hastanelerimiz.css
-wwwroot\css\home.css

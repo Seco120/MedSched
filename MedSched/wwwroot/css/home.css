@@ -72,7 +72,7 @@
 @media (max-width: 768px) {
     /* 1. Kapsayıcı: 'body' ekleyerek JS'nin inline stillerine karşı güçlendirdik */
     body .slider-container {
-        margin-top: 85px !important; /* Header mesafesi */
+        margin-top: 5px !important; /* Header mesafesi */
         height: calc(100dvh - 85px) !important;
         width: 100% !important;
         position: relative;

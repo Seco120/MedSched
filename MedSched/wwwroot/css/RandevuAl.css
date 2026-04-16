@@ -1,6 +1,6 @@
 ﻿body {
     background-color: #111;
-    color: #e4e4e4ff; 
+    color: #e4e4e4ff;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -14,6 +14,7 @@
 }
 
 form {
+    margin-top:70px;
     background-color: #222;
     padding: 30px 40px;
     border-radius: 10px;
@@ -69,8 +70,8 @@ select, input[type="date"] {
     -moz-appearance: none;
     cursor: pointer;
 }
-
 /* Flatpickr takvim görünümü için */
+
 .flatpickr-calendar {
     background-color: #111;
     border: 2px solid #e4e4e4ff;
@@ -91,8 +92,7 @@ select, input[type="date"] {
         color: #111;
     }
 
-.flatpickr-months,
-.flatpickr-weekdays {
+.flatpickr-months, .flatpickr-weekdays {
     background-color: #111;
     color: #e4e4e4ff;
     border-bottom: 1px solid #e4e4e4ff;
@@ -105,9 +105,9 @@ select, input[type="date"] {
 }
 
 
-    select:focus, input[type="date"]:focus {
-        border-color: #e4e4e4ff;
-    }
+select:focus, input[type="date"]:focus {
+    border-color: #e4e4e4ff;
+}
 
 #saatCheckboxlar label {
     display: inline-block;
@@ -148,18 +148,18 @@ select, input[type="date"] {
     width: 100%;
 }
 
-#submitBtn:disabled {
-    background-color: #999;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
+    #submitBtn:disabled {
+        background-color: #999;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
 /* Gizleme için */
+
 .hidden {
     display: none;
 }
-
 /* Ok işareti için select */
+
 select {
     background-image: linear-gradient(45deg, transparent 50%, #f5d742 50%), linear-gradient(135deg, #f5d742 50%, transparent 50%), linear-gradient(to right, #222, #222);
     background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 25px) 0.5em;
@@ -167,23 +167,22 @@ select {
     background-repeat: no-repeat;
 }
 
-    /* Blur efekti için yarı saydam katman */
-    .arka-plan::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(8px); /* Safari için */
-        background-color: rgba(0, 0, 0, 0.2); /* Hafif karartma isteğe bağlı */
-        z-index: -1;
-    }
-
+/* Blur efekti için yarı saydam katman */
+.arka-plan::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(8px); /* Safari için */
+    background-color: rgba(0, 0, 0, 0.2); /* Hafif karartma isteğe bağlı */
+    z-index: -1;
+}
 /* Tarih seçici ikonunu beyaz yapma */
-input[type="date"]::-webkit-calendar-picker-indicator,
-#tarihInput::-webkit-calendar-picker-indicator {
+
+input[type="date"]::-webkit-calendar-picker-indicator, #tarihInput::-webkit-calendar-picker-indicator {
     filter: invert(1); /* Siyah ikonu beyaza çevirir */
     cursor: pointer;
     opacity: 0.8; /* Çok parlama yapmasın istersen */
@@ -194,7 +193,6 @@ input[type="date"]::-webkit-calendar-picker-indicator,
     #tarihInput::-webkit-calendar-picker-indicator:hover {
         opacity: 1; /* Üzerine gelince parlasın */
     }
-
 /* --- 6. MADDE: MOBİL SIĞMAMA ÇÖZÜMÜ --- */
 
 @media (max-width: 768px) {
@@ -217,28 +215,49 @@ input[type="date"]::-webkit-calendar-picker-indicator,
         box-sizing: border-box;
         box-shadow: 0 0 10px rgba(228, 228, 228, 0.3); /* Mobilde gölgeyi hafiflet */
     }
-
-    /* Saat seçenekleri mobilde çok yer kaplar, bunları yan yana değil alt alta veya daha sıkı dizelim */
+    /* TARİH SEÇİCİ DÜZELTMESİ: Daralmayı engeller */
+    input[type="date"], #tarihInput {
+        width: 100% !important;
+        min-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 12px !important;
+        font-size: 16px !important; /* Mobilde otomatik zoom'u önler */
+    }
+    /* SAAT SEÇENEKLERİ: Mobilde daha basılabilir ve düzenli */
     #saatCheckboxlar label {
-        width: 45%; /* Yan yana 2 tane sığacak şekilde */
+        width: 45%;
         margin: 5px 2%;
         font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.05); /* Kutucuk hissi verir */
+        padding: 10px 5px;
+        border-radius: 5px;
+        text-align: center;
+        box-sizing: border-box;
+        display: inline-block;
     }
+        /* GEÇMİŞ SAATLER: Mobilde üzerini zorla çiziyoruz */
+        #saatCheckboxlar label.disabled,
+        #saatCheckboxlar label.disabled span,
+        #saatCheckboxlar input[type="radio"]:disabled + span {
+            text-decoration: line-through !important;
+            color: #666 !important; /* Sönük gri renk */
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+            background: transparent !important;
+        }
 
     #submitBtn {
         position: relative;
         margin-top: 25px;
-        padding: 15px !important; /* Parmakla basmayı kolaylaştır */
+        padding: 15px !important;
         font-size: 1.2rem !important;
     }
 
-    /* Takvimin (Flatpickr) mobilde ekran dışına taşmasını engelle */
     .flatpickr-calendar {
         width: 95% !important;
         left: 2.5% !important;
     }
 }
-
 /* Çok küçük telefonlar için (iPhone SE vb.) */
 @media (max-width: 380px) {
     #saatCheckboxlar label {
